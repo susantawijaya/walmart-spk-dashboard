@@ -43,10 +43,6 @@ export default function CreditPage() {
           <span className="credit-number">02</span><h2>Subjek data</h2>
           <dl><div><dt>Perusahaan</dt><dd>Walmart</dd></div><div><dt>Domain</dt><dd>Retail / supermarket</dd></div><div><dt>Objek analisis</dt><dd>45 toko</dd></div><div><dt>Periode</dt><dd>2010–2012</dd></div></dl>
         </article>
-        <article>
-          <span className="credit-number">03</span><h2>Diagram UML</h2>
-          <dl><div><dt>Sumber aset</dt><dd>File proyek pengguna</dd></div><div><dt>Nama file</dt><dd>walmart usecase.drawio.png</dd></div><div><dt>Penggunaan</dt><dd>Dokumentasi teknis</dd></div><div><dt>Modifikasi</dt><dd>Tidak digambar ulang</dd></div></dl>
-        </article>
       </section>
 
       <aside className="attribution-note">

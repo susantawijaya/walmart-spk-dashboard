@@ -268,14 +268,14 @@ export function DashboardClient({ records }: DashboardClientProps) {
           </ResponsiveContainer>
         </ChartCard>
 
-        <ChartCard title="Peringkat Penjualan Toko" subtitle="10 toko dengan total penjualan tertinggi" badge="Store">
+        <ChartCard title="Rata-rata Penjualan per Tahun" subtitle="Perbandingan performa tahunan pada filter" badge="Date">
           <ResponsiveContainer {...chartContainerProps}>
-            <BarChart data={storeData} layout="vertical" margin={{ top: 4, right: 10, left: 8, bottom: 4 }}>
-              <CartesianGrid stroke="#e8edf5" strokeDasharray="4 4" horizontal={false} />
-              <XAxis type="number" tickFormatter={formatCompactCurrency} tick={{ fill: "#667085", fontSize: 10 }} />
-              <YAxis type="category" dataKey="name" width={58} tick={{ fill: "#344054", fontSize: 11 }} />
+            <BarChart data={yearData} margin={{ top: 8, right: 12, left: 0, bottom: 4 }}>
+              <CartesianGrid stroke="#e8edf5" strokeDasharray="4 4" vertical={false} />
+              <XAxis dataKey="year" tick={{ fill: "#344054", fontSize: 12 }} />
+              <YAxis tickFormatter={formatCompactCurrency} width={72} tick={{ fill: "#667085", fontSize: 10 }} />
               <Tooltip formatter={(value) => formatCurrency(Number(value))} />
-              <Bar dataKey="sales" name="Penjualan" fill="#0071ce" radius={[0, 7, 7, 0]} />
+              <Bar dataKey="average" name="Rata-rata" fill="#0e9f6e" radius={[7, 7, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </ChartCard>
@@ -292,14 +292,14 @@ export function DashboardClient({ records }: DashboardClientProps) {
           </ResponsiveContainer>
         </ChartCard>
 
-        <ChartCard title="Rata-rata Penjualan per Tahun" subtitle="Perbandingan performa tahunan pada filter" badge="Date">
+        <ChartCard title="Peringkat Penjualan Toko" subtitle="10 toko dengan total penjualan tertinggi" wide badge="Store">
           <ResponsiveContainer {...chartContainerProps}>
-            <BarChart data={yearData} margin={{ top: 8, right: 12, left: 0, bottom: 4 }}>
-              <CartesianGrid stroke="#e8edf5" strokeDasharray="4 4" vertical={false} />
-              <XAxis dataKey="year" tick={{ fill: "#344054", fontSize: 12 }} />
-              <YAxis tickFormatter={formatCompactCurrency} width={72} tick={{ fill: "#667085", fontSize: 10 }} />
+            <BarChart data={storeData} layout="vertical" margin={{ top: 4, right: 10, left: 8, bottom: 4 }}>
+              <CartesianGrid stroke="#e8edf5" strokeDasharray="4 4" horizontal={false} />
+              <XAxis type="number" tickFormatter={formatCompactCurrency} tick={{ fill: "#667085", fontSize: 10 }} />
+              <YAxis type="category" dataKey="name" width={58} tick={{ fill: "#344054", fontSize: 11 }} />
               <Tooltip formatter={(value) => formatCurrency(Number(value))} />
-              <Bar dataKey="average" name="Rata-rata" fill="#0e9f6e" radius={[7, 7, 0, 0]} />
+              <Bar dataKey="sales" name="Penjualan" fill="#0071ce" radius={[0, 7, 7, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </ChartCard>

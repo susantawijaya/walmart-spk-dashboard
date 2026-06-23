@@ -43,13 +43,8 @@ export default function DocumentationPage() {
           <h2>UML Use Case Diagram</h2>
           <p>Aktor utama adalah pengguna yang menganalisis data dan menjalankan proses keputusan.</p>
         </div>
-        <div className="drawio-diagram">
-          <Image src="/walmart-usecase-diagram.png" width={501} height={562} alt="UML Use Case Diagram SPK Walmart dari file draw.io pengguna" priority />
-          <div className="drawio-diagram__meta">
-            <span>Diagram sumber</span><strong>walmart usecase.drawio.png</strong>
-            <p>Gambar ditampilkan langsung dari aset draw.io yang diberikan pengguna dan tidak digambar ulang oleh sistem.</p>
-            <a href="/walmart-usecase-diagram.png" target="_blank" rel="noreferrer">Buka ukuran penuh</a>
-          </div>
+        <div className="drawio-diagram" style={{ display: "flex", justifyContent: "center", alignItems: "center", padding: "30px" }}>
+          <Image src="/walmart-usecase-diagram-v2.png" width={501} height={562} alt="UML Use Case Diagram SPK Walmart" priority />
         </div>
         <div className="usecase-description">
           <h3>Deskripsi aktor</h3>
@@ -74,8 +69,8 @@ export default function DocumentationPage() {
             <li style={{ marginBottom: "4px" }}><strong>Menerima rekomendasi prioritas:</strong> Memperoleh output toko utama dan toko cadangan penerima dana.</li>
             <li style={{ marginBottom: "4px" }}><strong>Membaca business questions:</strong> Melihat 5 pertanyaan bisnis analitis dengan jawaban berbasis data riil.</li>
             <li style={{ marginBottom: "4px" }}><strong>Membaca dokumentasi teknis:</strong> Mengakses sitemap dan memvalidasi UML diagram.</li>
-            <li style={{ marginBottom: "4px" }}><strong style={{ color: "var(--blue-dark)" }}>Melihat profil &amp; kamus data [Baru]:</strong> Mengakses detail kolom, preview 10 baris data, dan analisis clustering di halaman Dataset.</li>
-            <li style={{ marginBottom: "4px" }}><strong style={{ color: "var(--blue-dark)" }}>Melihat kredit &amp; atribusi aset [Baru]:</strong> Membaca atribusi penyedia data Kaggle mikhail1681 serta pembuat diagram draw.io di halaman Kredit.</li>
+            <li style={{ marginBottom: "4px" }}><strong>Melihat dataset:</strong> Menampilkan informasi detail kolom, preview data, dan analisis clustering.</li>
+            <li style={{ marginBottom: "4px" }}><strong>Melihat kredit dataset:</strong> Menampilkan atribusi penyedia data Kaggle dan informasi proyek.</li>
           </ul>
         </div>
       </section>
