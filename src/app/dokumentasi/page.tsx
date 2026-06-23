@@ -44,7 +44,9 @@ export default function DocumentationPage() {
           <p>Aktor utama adalah pengguna yang menganalisis data dan menjalankan proses keputusan.</p>
         </div>
         <div className="drawio-diagram" style={{ display: "flex", justifyContent: "center", alignItems: "center", padding: "30px" }}>
-          <Image src="/walmart-usecase-diagram-v2.png" width={501} height={562} alt="UML Use Case Diagram SPK Walmart" priority />
+          <div style={{ maxWidth: "420px", width: "100%" }}>
+            <Image src="/walmart-usecase-diagram-v2.png" width={501} height={562} alt="UML Use Case Diagram SPK Walmart" style={{ width: "100%", height: "auto" }} priority />
+          </div>
         </div>
         <div className="usecase-description">
           <h3>Deskripsi aktor</h3>

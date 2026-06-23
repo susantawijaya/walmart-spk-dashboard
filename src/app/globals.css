@@ -1597,7 +1597,7 @@ input {
 .credit-grid {
   display: grid;
   margin-bottom: 18px;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 14px;
 }
 
@@ -2095,142 +2095,14 @@ input {
   }
 }
 
-/* Theme Styles & Overrides */
-[data-theme='dark'] {
-  --ink: #f8fafc;
-  --muted: #94a3b8;
-  --line: #334155;
-  --surface: #1e293b;
-  --background: #0f172a;
-  --blue-soft: rgba(0, 113, 206, 0.15);
-  --blue-dark: #3b82f6;
-  --shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+/* World Class Interactive Hover Animations */
+.scorecard, 
+.chart-card, 
+.documentation-card {
+  position: relative !important;
+  overflow: hidden !important;
 }
 
-[data-theme='dark'] .site-header {
-  background: rgba(15, 23, 42, 0.92);
-  border-bottom-color: var(--line);
-}
-
-[data-theme='dark'] .dashboard-overview article,
-[data-theme='dark'] .scorecard,
-[data-theme='dark'] .chart-card,
-[data-theme='dark'] .decision-input,
-[data-theme='dark'] .importance-control,
-[data-theme='dark'] .sitemap-node,
-[data-theme='dark'] .site-footer {
-  background: var(--surface);
-  color: var(--ink);
-}
-
-[data-theme='dark'] .field select,
-[data-theme='dark'] .importance-select-row select,
-[data-theme='dark'] select {
-  background-color: var(--surface) !important;
-  color: var(--ink) !important;
-  border-color: var(--line) !important;
-}
-
-[data-theme='dark'] .main-nav__link {
-  color: #94a3b8;
-}
-
-[data-theme='dark'] .main-nav__link:hover {
-  background: #1e293b;
-  color: #3b82f6;
-}
-
-[data-theme='dark'] .main-nav__link.is-active {
-  background: rgba(59, 130, 246, 0.15);
-  color: #60a5fa;
-}
-
-[data-theme='dark'] .brand small {
-  color: var(--muted);
-}
-
-[data-theme='dark'] .data-table {
-  color: var(--ink);
-}
-
-[data-theme='dark'] .data-table th {
-  background: #1e293b;
-  color: #f1f5f9;
-  border-bottom-color: var(--line);
-}
-
-[data-theme='dark'] .data-table td {
-  border-bottom-color: var(--line);
-}
-
-[data-theme='dark'] .data-table tr:hover td {
-  background: #334155;
-}
-
-[data-theme='dark'] .data-role {
-  background: #334155;
-  color: #f1f5f9;
-}
-
-[data-theme='dark'] .recharts-default-tooltip {
-  background-color: #1e293b !important;
-  border-color: #334155 !important;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.5) !important;
-}
-
-[data-theme='dark'] .recharts-tooltip-label,
-[data-theme='dark'] .recharts-tooltip-item {
-  color: #f1f5f9 !important;
-}
-
-[data-theme='dark'] .usecase-description {
-  background: #1e293b;
-  color: var(--ink);
-}
-
-[data-theme='dark'] .credit-primary {
-  background: var(--surface);
-  border-color: var(--line);
-}
-
-[data-theme='dark'] .credit-avatar {
-  background: #334155;
-  color: #3b82f6;
-}
-
-[data-theme='dark'] .importance-control__title > span {
-  background: #1e293b;
-  color: #60a5fa;
-}
-
-[data-theme='dark'] .decision-purpose {
-  background: linear-gradient(135deg, #0f172a, #1e293b);
-  border: 1px solid var(--line);
-}
-
-/* Theme Toggle Button Style */
-.theme-toggle-btn {
-  display: grid;
-  width: 40px;
-  height: 40px;
-  place-items: center;
-  border-radius: 12px;
-  border: 1px solid var(--line);
-  background: var(--surface);
-  color: var(--blue);
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-  box-shadow: var(--shadow);
-}
-
-.theme-toggle-btn:hover {
-  transform: scale(1.08) rotate(15deg);
-  background: var(--blue-soft);
-  border-color: var(--blue);
-  color: var(--blue-dark);
-}
-
-/* World Class 3D Interactive Hover Animations */
 .scorecard, 
 .chart-card, 
 .documentation-card, 
@@ -2243,12 +2115,9 @@ input {
 .sitemap-node,
 .dataset-stat-grid article,
 .credit-grid article {
-  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
-              box-shadow 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
-              border-color 0.3s ease, 
-              background-color 0.3s ease;
-  transform-style: preserve-3d;
-  perspective: 1000px;
+  transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), 
+              box-shadow 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), 
+              border-color 0.2s ease;
 }
 
 .scorecard:hover, 
@@ -2262,13 +2131,12 @@ input {
 .sitemap-node:hover,
 .dataset-stat-grid article:hover,
 .credit-grid article:hover {
-  transform: translateY(-8px) scale(1.015) rotateX(1.5deg) rotateY(-1.5deg);
-  box-shadow: 0 25px 50px rgba(16, 24, 40, 0.15), 
-              0 0 30px rgba(0, 113, 206, 0.12);
+  transform: translateY(-3px);
+  box-shadow: 0 16px 36px rgba(16, 24, 40, 0.1), 0 0 20px rgba(0, 113, 206, 0.06);
   border-color: var(--blue);
 }
 
-/* Card hover glow effect */
+/* Card hover glow sheen effect */
 .scorecard::after, 
 .chart-card::after,
 .documentation-card::after {
@@ -2281,21 +2149,10 @@ input {
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(255, 255, 255, 0.08),
+    rgba(0, 113, 206, 0.03),
     transparent
   );
   transition: 0.5s;
-}
-
-[data-theme='dark'] .scorecard::after,
-[data-theme='dark'] .chart-card::after,
-[data-theme='dark'] .documentation-card::after {
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.04),
-    transparent
-  );
 }
 
 .scorecard:hover::after, 

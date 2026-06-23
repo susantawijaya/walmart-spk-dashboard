@@ -15,27 +15,14 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="id" suppressHydrationWarning>
-      <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function() {
-                try {
-                  var theme = localStorage.getItem('theme') || 'light';
-                  document.documentElement.setAttribute('data-theme', theme);
-                } catch (e) {}
-              })();
-            `,
-          }}
-        />
-      </head>
+    <html lang="id">
       <body>
         <SiteHeader />
         <main>{children}</main>
         <footer className="site-footer">
           <div className="container site-footer__inner">
             <span>SPK Prioritas Toko Walmart</span>
+            <span>&copy; 2026 Gede susanta wijaya (322410006) &amp; Xander Covelin (322410017)</span>
             <span>Dataset Walmart Sales · AHP–TOPSIS</span>
           </div>
         </footer>
