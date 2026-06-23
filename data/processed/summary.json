@@ -1,0 +1,47 @@
+{
+  "dataset": {
+    "title": "Walmart Sales",
+    "sourceUrl": "https://www.kaggle.com/datasets/mikhail1681/walmart-sales",
+    "fileName": "Walmart_Sales.csv",
+    "rowCount": 6435,
+    "columnCount": 8,
+    "storeCount": 45,
+    "years": [
+      2010,
+      2011,
+      2012
+    ],
+    "startDate": "2010-02-05",
+    "endDate": "2012-10-26",
+    "missingCellCount": 0
+  },
+  "overall": {
+    "totalSales": 6737218987.11001,
+    "averageWeeklySales": 1046964.8775617732,
+    "bestWeeklySales": 3818686.45,
+    "holidaySales": 505299551.55999994,
+    "nonHolidaySales": 6231919435.550011,
+    "bestYear": 2011,
+    "bestYearSales": 2448200007.3499975
+  },
+  "years": [
+    {
+      "year": 2010,
+      "totalSales": 2288886120.41,
+      "averageWeeklySales": 1059669.5001898147,
+      "recordCount": 2160
+    },
+    {
+      "year": 2011,
+      "totalSales": 2448200007.3499975,
+      "averageWeeklySales": 1046239.3193803409,
+      "recordCount": 2340
+    },
+    {
+      "year": 2012,
+      "totalSales": 2000132859.3500023,
+      "averageWeeklySales": 1033660.3924289418,
+      "recordCount": 1935
+    }
+  ]
+}

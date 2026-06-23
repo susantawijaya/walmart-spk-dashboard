@@ -1,0 +1,18 @@
+# Dependensi dan hasil build
+node_modules/
+.next/
+out/
+dist/
+
+# Rahasia lokal
+.env
+.env.local
+.env.*.local
+
+# Cache, log, dan berkas sistem
+.npm-cache/
+coverage/
+*.log
+*.tsbuildinfo
+.DS_Store
+Thumbs.db
