@@ -2,144 +2,276 @@ import { parse } from "csv-parse/sync";
 import { z } from "zod";
 
 import type {
+  CategorySummary,
   DatasetSummary,
-  WeeklySalesRecord,
+  DiscountRange,
+  ProductMetric,
+  SuperstoreSalesRecord,
 } from "@/lib/data/contracts";
 
 const rawRowSchema = z.object({
-  Store: z.string().min(1),
-  Date: z.string().regex(/^\d{2}-\d{2}-\d{4}$/),
-  Weekly_Sales: z.string().min(1),
-  Holiday_Flag: z.enum(["0", "1"]),
-  Temperature: z.string().min(1),
-  Fuel_Price: z.string().min(1),
-  CPI: z.string().min(1),
-  Unemployment: z.string().min(1),
+  "Row ID": z.string().min(1),
+  "Order ID": z.string().min(1),
+  "Order Date": z.string().min(1),
+  "Ship Date": z.string().min(1),
+  "Ship Mode": z.string().min(1),
+  "Customer ID": z.string().min(1),
+  "Customer Name": z.string().min(1),
+  Segment: z.string().min(1),
+  Country: z.string().min(1),
+  City: z.string().min(1),
+  State: z.string().min(1),
+  "Postal Code": z.string().optional().default(""),
+  Region: z.string().min(1),
+  "Product ID": z.string().min(1),
+  Category: z.string().min(1),
+  "Sub-Category": z.string().min(1),
+  "Product Name": z.string().min(1),
+  Sales: z.string().min(1),
+  Quantity: z.string().min(1),
+  Discount: z.string().min(1),
+  Profit: z.string().min(1),
 });
 
 export const EXPECTED_COLUMNS = [
-  "Store",
-  "Date",
-  "Weekly_Sales",
-  "Holiday_Flag",
-  "Temperature",
-  "Fuel_Price",
-  "CPI",
-  "Unemployment",
+  "Row ID",
+  "Order ID",
+  "Order Date",
+  "Ship Date",
+  "Ship Mode",
+  "Customer ID",
+  "Customer Name",
+  "Segment",
+  "Country",
+  "City",
+  "State",
+  "Postal Code",
+  "Region",
+  "Product ID",
+  "Category",
+  "Sub-Category",
+  "Product Name",
+  "Sales",
+  "Quantity",
+  "Discount",
+  "Profit",
 ] as const;
 
-function toFiniteNumber(value: string, field: string, row: number): number {
-  const result = Number(value);
-  if (!Number.isFinite(result)) {
-    throw new Error(`Nilai ${field} pada baris ${row} bukan angka yang valid.`);
-  }
-  return result;
+function cleanNumber(value: string): number {
+  const result = Number(value.replace(/[$,]/g, "").trim());
+  return Number.isFinite(result) ? result : 0;
 }
 
-function toIsoDate(value: string, row: number): string {
-  const [day, month, year] = value.split("-").map(Number);
-  const date = new Date(Date.UTC(year, month - 1, day));
-  if (
-    date.getUTCFullYear() !== year ||
-    date.getUTCMonth() !== month - 1 ||
-    date.getUTCDate() !== day
-  ) {
-    throw new Error(`Tanggal pada baris ${row} tidak valid: ${value}.`);
-  }
-  return `${year.toString().padStart(4, "0")}-${month
-    .toString()
-    .padStart(2, "0")}-${day.toString().padStart(2, "0")}`;
+function parseDate(value: string): Date {
+  const [month, day, year] = value.split("/").map(Number);
+  return new Date(Date.UTC(year, month - 1, day));
 }
 
-export function parseWalmartCsv(csvText: string): WeeklySalesRecord[] {
+function formatDate(value: Date): string {
+  return value.toISOString().slice(0, 10);
+}
+
+function formatMonth(value: Date): string {
+  return value.toISOString().slice(0, 7);
+}
+
+function daysBetween(start: Date, end: Date): number {
+  return Math.max(
+    0,
+    Math.round((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)),
+  );
+}
+
+function discountRange(discount: number): DiscountRange {
+  if (discount === 0) return "0%";
+  if (discount <= 0.1) return "1-10%";
+  if (discount <= 0.2) return "11-20%";
+  if (discount <= 0.3) return "21-30%";
+  return ">30%";
+}
+
+function profitMargin(profit: number, sales: number): number {
+  return sales === 0 ? 0 : profit / sales;
+}
+
+export function parseSuperstoreCsv(csvText: string): SuperstoreSalesRecord[] {
   const header = csvText.split(/\r?\n/, 1)[0]?.split(",") ?? [];
-  if (header.join("|") !== EXPECTED_COLUMNS.join("|")) {
+  const cleanHeader = header.map((item) => item.trim().replace(/^"|"$/g, ""));
+
+  if (cleanHeader.join("|") !== EXPECTED_COLUMNS.join("|")) {
     throw new Error(
-      `Kolom CSV tidak sesuai. Diharapkan: ${EXPECTED_COLUMNS.join(", ")}.`,
+      `Kolom CSV Superstore tidak sesuai. Diharapkan: ${EXPECTED_COLUMNS.join(", ")}. Ditemukan: ${cleanHeader.join(", ")}`,
     );
   }
+
   const rows = parse(csvText, {
+    bom: true,
     columns: true,
     skip_empty_lines: true,
     trim: true,
   }) as Record<string, string>[];
 
-  return rows.map((unvalidatedRow, index) => {
-    const rowNumber = index + 2;
+  return rows.map((unvalidatedRow) => {
     const row = rawRowSchema.parse(unvalidatedRow);
-    const date = toIsoDate(row.Date, rowNumber);
-    const store = toFiniteNumber(row.Store, "Store", rowNumber);
-    if (!Number.isInteger(store) || store <= 0) {
-      throw new Error(`Store pada baris ${rowNumber} harus bilangan bulat positif.`);
-    }
+    const orderDate = parseDate(row["Order Date"]);
+    const shipDate = parseDate(row["Ship Date"]);
+    const sales = cleanNumber(row.Sales);
+    const quantity = cleanNumber(row.Quantity);
+    const discount = cleanNumber(row.Discount);
+    const profit = cleanNumber(row.Profit);
+
     return {
-      store,
-      date,
-      year: Number(date.slice(0, 4)),
-      weeklySales: toFiniteNumber(row.Weekly_Sales, "Weekly_Sales", rowNumber),
-      isHoliday: row.Holiday_Flag === "1",
-      temperature: toFiniteNumber(row.Temperature, "Temperature", rowNumber),
-      fuelPrice: toFiniteNumber(row.Fuel_Price, "Fuel_Price", rowNumber),
-      cpi: toFiniteNumber(row.CPI, "CPI", rowNumber),
-      unemployment: toFiniteNumber(row.Unemployment, "Unemployment", rowNumber),
+      rowId: cleanNumber(row["Row ID"]),
+      orderId: row["Order ID"],
+      orderDate: formatDate(orderDate),
+      shipDate: formatDate(shipDate),
+      orderMonth: formatMonth(orderDate),
+      orderYear: orderDate.getUTCFullYear(),
+      shipMode: row["Ship Mode"],
+      customerId: row["Customer ID"],
+      customerName: row["Customer Name"],
+      segment: row.Segment,
+      country: row.Country,
+      city: row.City,
+      state: row.State,
+      postalCode: row["Postal Code"],
+      region: row.Region,
+      productId: row["Product ID"],
+      category: row.Category,
+      subCategory: row["Sub-Category"],
+      productName: row["Product Name"],
+      sales,
+      quantity,
+      discount,
+      profit,
+      profitMargin: profitMargin(profit, sales),
+      shippingDays: daysBetween(orderDate, shipDate),
+      discountRange: discountRange(discount),
+      isLoss: profit < 0,
+    };
+  });
+}
+
+export function buildProductMetrics(records: SuperstoreSalesRecord[]): ProductMetric[] {
+  const grouped = new Map<string, SuperstoreSalesRecord[]>();
+  records.forEach((record) => {
+    grouped.set(record.productId, [...(grouped.get(record.productId) ?? []), record]);
+  });
+
+  return [...grouped.entries()].map(([productId, productRecords]) => {
+    const first = productRecords[0];
+    const totalSales = productRecords.reduce((sum, record) => sum + record.sales, 0);
+    const totalProfit = productRecords.reduce((sum, record) => sum + record.profit, 0);
+    const orderIds = new Set(productRecords.map((record) => record.orderId));
+    const customerIds = new Set(productRecords.map((record) => record.customerId));
+    const average = (values: number[]) =>
+      values.length === 0
+        ? 0
+        : values.reduce((sum, value) => sum + value, 0) / values.length;
+
+    return {
+      productId,
+      productName: first.productName,
+      category: first.category,
+      subCategory: first.subCategory,
+      totalSales,
+      totalProfit,
+      totalQuantity: productRecords.reduce((sum, record) => sum + record.quantity, 0),
+      orderCount: orderIds.size,
+      customerCount: customerIds.size,
+      averageDiscount: average(productRecords.map((record) => record.discount)),
+      profitMargin: profitMargin(totalProfit, totalSales),
+      lossOrderRatio:
+        productRecords.filter((record) => record.isLoss).length / productRecords.length,
+      averageShippingDays: average(productRecords.map((record) => record.shippingDays)),
     };
   });
 }
 
 export function buildDatasetSummary(
-  records: WeeklySalesRecord[],
+  records: SuperstoreSalesRecord[],
 ): DatasetSummary {
   if (records.length === 0) {
-    throw new Error("Dataset Walmart tidak boleh kosong.");
+    throw new Error("Dataset Superstore tidak boleh kosong.");
   }
-  const years = [...new Set(records.map((record) => record.year))].sort();
-  const yearSummaries = years.map((year) => {
-    const yearRecords = records.filter((record) => record.year === year);
-    const totalSales = yearRecords.reduce(
-      (sum, record) => sum + record.weeklySales,
-      0,
-    );
-    return {
-      year,
-      totalSales,
-      averageWeeklySales: totalSales / yearRecords.length,
-      recordCount: yearRecords.length,
-    };
-  });
-  const bestYear = [...yearSummaries].sort(
-    (left, right) => right.totalSales - left.totalSales,
-  )[0];
-  const sortedDates = records.map((record) => record.date).sort();
-  const totalSales = records.reduce(
-    (sum, record) => sum + record.weeklySales,
-    0,
-  );
-  const holidaySales = records
-    .filter((record) => record.isHoliday)
-    .reduce((sum, record) => sum + record.weeklySales, 0);
+
+  const metrics = buildProductMetrics(records);
+  const orderIds = new Set(records.map((record) => record.orderId));
+  const customerIds = new Set(records.map((record) => record.customerId));
+  const categories = [...new Set(records.map((record) => record.category))].sort();
+  const subCategories = new Set(records.map((record) => record.subCategory));
+  const totalSales = records.reduce((sum, record) => sum + record.sales, 0);
+  const totalProfit = records.reduce((sum, record) => sum + record.profit, 0);
+  const average = (values: number[]) =>
+    values.length === 0
+      ? 0
+      : values.reduce((sum, value) => sum + value, 0) / values.length;
+
+  const categorySummaries: CategorySummary[] = categories
+    .map((category) => {
+      const categoryRecords = records.filter((record) => record.category === category);
+      const categorySales = categoryRecords.reduce((sum, record) => sum + record.sales, 0);
+      const categoryProfit = categoryRecords.reduce((sum, record) => sum + record.profit, 0);
+      return {
+        category,
+        totalSales: categorySales,
+        totalProfit: categoryProfit,
+        totalQuantity: categoryRecords.reduce((sum, record) => sum + record.quantity, 0),
+        orderCount: new Set(categoryRecords.map((record) => record.orderId)).size,
+        profitMargin: profitMargin(categoryProfit, categorySales),
+        averageDiscount: average(categoryRecords.map((record) => record.discount)),
+      };
+    })
+    .sort((left, right) => right.totalSales - left.totalSales);
+
+  const subCategoryProfit = [...new Set(records.map((record) => record.subCategory))]
+    .map((subCategory) => {
+      const subCategoryRecords = records.filter(
+        (record) => record.subCategory === subCategory,
+      );
+      return {
+        subCategory,
+        totalProfit: subCategoryRecords.reduce((sum, record) => sum + record.profit, 0),
+      };
+    })
+    .sort((left, right) => right.totalProfit - left.totalProfit);
+  const sortedDates = records.map((record) => record.orderDate).sort();
 
   return {
     dataset: {
-      title: "Walmart Sales",
-      sourceUrl: "https://www.kaggle.com/datasets/mikhail1681/walmart-sales",
-      fileName: "Walmart_Sales.csv",
+      title: "Sample Superstore Sales Dataset",
+      sourceUrl: "https://www.kaggle.com/datasets/vivek468/superstore-dataset-final",
+      uploader: "vivek468",
+      fileName: "Sample - Superstore.csv",
       rowCount: records.length,
       columnCount: EXPECTED_COLUMNS.length,
-      storeCount: new Set(records.map((record) => record.store)).size,
-      years,
-      startDate: sortedDates[0],
-      endDate: sortedDates.at(-1) ?? sortedDates[0],
-      missingCellCount: 0,
+      orderCount: orderIds.size,
+      customerCount: customerIds.size,
+      productCount: metrics.length,
+      categories,
+      subCategoryCount: subCategories.size,
+      dateRange: {
+        start: sortedDates[0],
+        end: sortedDates.at(-1) ?? sortedDates[0],
+      },
+      missingCellCount: records.reduce((sum, record) => {
+        const missingPostalCode = record.postalCode.trim().length === 0 ? 1 : 0;
+        return sum + missingPostalCode;
+      }, 0),
     },
     overall: {
       totalSales,
-      averageWeeklySales: totalSales / records.length,
-      bestWeeklySales: Math.max(...records.map((record) => record.weeklySales)),
-      holidaySales,
-      nonHolidaySales: totalSales - holidaySales,
-      bestYear: bestYear.year,
-      bestYearSales: bestYear.totalSales,
+      totalProfit,
+      totalQuantity: records.reduce((sum, record) => sum + record.quantity, 0),
+      orderCount: orderIds.size,
+      profitMargin: profitMargin(totalProfit, totalSales),
+      averageDiscount: average(records.map((record) => record.discount)),
+      averageShippingDays: average(records.map((record) => record.shippingDays)),
+      lossOrderRatio: records.filter((record) => record.isLoss).length / records.length,
+      bestSalesCategory: categorySummaries[0].category,
+      bestProfitSubCategory: subCategoryProfit[0].subCategory,
+      worstProfitSubCategory: subCategoryProfit.at(-1)?.subCategory ?? "",
     },
-    years: yearSummaries,
+    categories: categorySummaries,
   };
 }

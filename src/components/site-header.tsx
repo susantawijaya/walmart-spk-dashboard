@@ -7,8 +7,6 @@ const navigation = [
   { href: "/", label: "Dashboard" },
   { href: "/spk", label: "SPK" },
   { href: "/business-questions", label: "Questions" },
-  { href: "/dataset", label: "Dataset" },
-  { href: "/dokumentasi", label: "Dokumentasi" },
   { href: "/kredit", label: "Kredit" },
 ];
 
@@ -18,11 +16,11 @@ export function SiteHeader() {
   return (
     <header className="site-header">
       <div className="site-header__inner">
-        <Link className="brand" href="/" aria-label="Beranda SPK Walmart">
-          <span className="brand__mark" aria-hidden="true">W</span>
+        <Link className="brand" href="/" aria-label="Beranda SPK Superstore">
+          <span className="brand__mark" aria-hidden="true">S</span>
           <span>
-            <strong>Walmart Insight</strong>
-            <small>SPK Prioritas Toko</small>
+            <strong>Superstore Insight</strong>
+            <small>SPK Prioritas Produk</small>
           </span>
         </Link>
         <nav className="main-nav" aria-label="Navigasi utama">

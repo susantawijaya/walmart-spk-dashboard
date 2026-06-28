@@ -1,11 +1,11 @@
 export interface TopsisAlternative<T> {
-  id: number;
+  id: string;
   values: number[];
   data: T;
 }
 
 export interface TopsisResult<T> {
-  id: number;
+  id: string;
   score: number;
   distancePositive: number;
   distanceNegative: number;
@@ -87,5 +87,5 @@ export function calculateTopsis<T>(
         data: alternative.data,
       };
     })
-    .sort((left, right) => right.score - left.score || left.id - right.id);
+    .sort((left, right) => right.score - left.score || left.id.localeCompare(right.id));
 }

@@ -1,47 +1,66 @@
 {
   "dataset": {
-    "title": "Walmart Sales",
-    "sourceUrl": "https://www.kaggle.com/datasets/mikhail1681/walmart-sales",
-    "fileName": "Walmart_Sales.csv",
-    "rowCount": 6435,
-    "columnCount": 8,
-    "storeCount": 45,
-    "years": [
-      2010,
-      2011,
-      2012
+    "title": "Sample Superstore Sales Dataset",
+    "sourceUrl": "https://www.kaggle.com/datasets/vivek468/superstore-dataset-final",
+    "uploader": "vivek468",
+    "fileName": "Sample - Superstore.csv",
+    "rowCount": 9994,
+    "columnCount": 21,
+    "orderCount": 5009,
+    "customerCount": 793,
+    "productCount": 1862,
+    "categories": [
+      "Furniture",
+      "Office Supplies",
+      "Technology"
     ],
-    "startDate": "2010-02-05",
-    "endDate": "2012-10-26",
+    "subCategoryCount": 17,
+    "dateRange": {
+      "start": "2014-01-03",
+      "end": "2017-12-30"
+    },
     "missingCellCount": 0
   },
   "overall": {
-    "totalSales": 6737218987.11001,
-    "averageWeeklySales": 1046964.8775617732,
-    "bestWeeklySales": 3818686.45,
-    "holidaySales": 505299551.55999994,
-    "nonHolidaySales": 6231919435.550011,
-    "bestYear": 2011,
-    "bestYearSales": 2448200007.3499975
+    "totalSales": 2297200.860299955,
+    "totalProfit": 286397.0217000013,
+    "totalQuantity": 37873,
+    "orderCount": 5009,
+    "profitMargin": 0.12467217240315906,
+    "averageDiscount": 0.15620272163298934,
+    "averageShippingDays": 3.958174904942966,
+    "lossOrderRatio": 0.18721232739643787,
+    "bestSalesCategory": "Technology",
+    "bestProfitSubCategory": "Copiers",
+    "worstProfitSubCategory": "Tables"
   },
-  "years": [
+  "categories": [
     {
-      "year": 2010,
-      "totalSales": 2288886120.41,
-      "averageWeeklySales": 1059669.5001898147,
-      "recordCount": 2160
+      "category": "Technology",
+      "totalSales": 836154.0329999966,
+      "totalProfit": 145454.9480999999,
+      "totalQuantity": 6939,
+      "orderCount": 1544,
+      "profitMargin": 0.17395712076891998,
+      "averageDiscount": 0.1323226854358401
     },
     {
-      "year": 2011,
-      "totalSales": 2448200007.3499975,
-      "averageWeeklySales": 1046239.3193803409,
-      "recordCount": 2340
+      "category": "Furniture",
+      "totalSales": 741999.7952999998,
+      "totalProfit": 18451.2728,
+      "totalQuantity": 8028,
+      "orderCount": 1764,
+      "profitMargin": 0.024866951334588872,
+      "averageDiscount": 0.17392267798208297
     },
     {
-      "year": 2012,
-      "totalSales": 2000132859.3500023,
-      "averageWeeklySales": 1033660.3924289418,
-      "recordCount": 1935
+      "category": "Office Supplies",
+      "totalSales": 719047.0320000029,
+      "totalProfit": 122490.80080000011,
+      "totalQuantity": 22906,
+      "orderCount": 3742,
+      "profitMargin": 0.17035158390028599,
+      "averageDiscount": 0.15728509790906708
     }
   ]
 }

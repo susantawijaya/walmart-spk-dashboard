@@ -1,54 +1,60 @@
-import type { WeeklySalesRecord } from "@/lib/data/contracts";
+import type { SuperstoreSalesRecord } from "@/lib/data/contracts";
 
 export interface DashboardFilters {
-  store: "all" | number;
-  year: "all" | number;
-  holiday: "all" | "holiday" | "regular";
+  years: number[];
+  startDate?: string;
+  endDate?: string;
+  regions: string[];
+  segments: string[];
+  categories: string[];
 }
 
 export function filterRecords(
-  records: WeeklySalesRecord[],
+  records: SuperstoreSalesRecord[],
   filters: DashboardFilters,
-): WeeklySalesRecord[] {
+): SuperstoreSalesRecord[] {
   return records.filter((record) => {
-    const storeMatches = filters.store === "all" || record.store === filters.store;
-    const yearMatches = filters.year === "all" || record.year === filters.year;
-    const holidayMatches =
-      filters.holiday === "all" ||
-      (filters.holiday === "holiday" ? record.isHoliday : !record.isHoliday);
-    return storeMatches && yearMatches && holidayMatches;
+    const yearMatches =
+      filters.years.length === 0 || filters.years.includes(record.orderYear);
+    const startDateMatches =
+      !filters.startDate || record.orderDate >= filters.startDate;
+    const endDateMatches = !filters.endDate || record.orderDate <= filters.endDate;
+    const regionMatches =
+      filters.regions.length === 0 || filters.regions.includes(record.region);
+    const segmentMatches =
+      filters.segments.length === 0 || filters.segments.includes(record.segment);
+    const categoryMatches =
+      filters.categories.length === 0 || filters.categories.includes(record.category);
+    return (
+      yearMatches &&
+      startDateMatches &&
+      endDateMatches &&
+      regionMatches &&
+      segmentMatches &&
+      categoryMatches
+    );
   });
 }
 
-export function summarizeRecords(records: WeeklySalesRecord[]) {
-  const totalSales = records.reduce(
-    (sum, record) => sum + record.weeklySales,
-    0,
-  );
-  const holidayRecords = records.filter((record) => record.isHoliday);
-  const holidaySales = holidayRecords.reduce(
-    (sum, record) => sum + record.weeklySales,
-    0,
-  );
+export function summarizeRecords(records: SuperstoreSalesRecord[]) {
+  const totalSales = records.reduce((sum, record) => sum + record.sales, 0);
+  const totalProfit = records.reduce((sum, record) => sum + record.profit, 0);
   const average = (values: number[]) =>
     values.length === 0
       ? 0
       : values.reduce((sum, value) => sum + value, 0) / values.length;
+
   return {
     totalSales,
-    averageWeeklySales: records.length === 0 ? 0 : totalSales / records.length,
-    recordCount: records.length,
-    bestWeeklySales:
+    totalProfit,
+    totalOrders: new Set(records.map((record) => record.orderId)).size,
+    totalQuantity: records.reduce((sum, record) => sum + record.quantity, 0),
+    profitMargin: totalSales === 0 ? 0 : totalProfit / totalSales,
+    averageDiscount: average(records.map((record) => record.discount)),
+    averageShippingDays: average(records.map((record) => record.shippingDays)),
+    lossOrderRatio:
       records.length === 0
         ? 0
-        : Math.max(...records.map((record) => record.weeklySales)),
-    holidaySales,
-    holidayShare: totalSales === 0 ? 0 : holidaySales / totalSales,
-    averageTemperature: average(records.map((record) => record.temperature)),
-    averageFuelPrice: average(records.map((record) => record.fuelPrice)),
-    averageCpi: average(records.map((record) => record.cpi)),
-    averageUnemployment: average(
-      records.map((record) => record.unemployment),
-    ),
+        : records.filter((record) => record.isLoss).length / records.length,
   };
 }

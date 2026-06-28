@@ -9,12 +9,14 @@ describe("AHP", () => {
 
     expect(result.weights).toHaveLength(6);
     expect(result.weights).toEqual(
-      expect.arrayContaining([
-        expect.closeTo(0.3, 8),
-        expect.closeTo(0.2, 8),
-        expect.closeTo(0.15, 8),
-        expect.closeTo(0.1, 8),
-      ]),
+      [
+        expect.closeTo(7 / 27, 5),
+        expect.closeTo(6 / 27, 5),
+        expect.closeTo(4 / 27, 5),
+        expect.closeTo(5 / 27, 5),
+        expect.closeTo(3 / 27, 5),
+        expect.closeTo(2 / 27, 5),
+      ],
     );
     expect(result.consistencyRatio).toBeCloseTo(0, 10);
     expect(result.isConsistent).toBe(true);

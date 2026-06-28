@@ -1,9 +1,3 @@
-const currency = new Intl.NumberFormat("id-ID", {
-  style: "currency",
-  currency: "USD",
-  maximumFractionDigits: 0,
-});
-
 const number = new Intl.NumberFormat("id-ID", {
   maximumFractionDigits: 0,
 });
@@ -14,7 +8,7 @@ const decimal = new Intl.NumberFormat("id-ID", {
 });
 
 export function formatCurrency(value: number): string {
-  return currency.format(value);
+  return `US$${number.format(value)}`;
 }
 
 export function formatNumber(value: number): string {
@@ -41,19 +35,14 @@ export function formatDecimal(value: number, digits = 2): string {
 }
 
 export function formatCompactCurrency(value: number): string {
-  return new Intl.NumberFormat("id-ID", {
-    style: "currency",
-    currency: "USD",
+  const compact = new Intl.NumberFormat("id-ID", {
     notation: "compact",
     maximumFractionDigits: 1,
   }).format(value);
+  return `US$${compact}`;
 }
 
-export function formatDate(value: string): string {
-  return new Intl.DateTimeFormat("id-ID", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-    timeZone: "UTC",
-  }).format(new Date(`${value}T00:00:00Z`));
+export function formatMonthLabel(value: string): string {
+  const [year, month] = value.split("-");
+  return `${month}/${year}`;
 }

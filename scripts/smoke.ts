@@ -42,12 +42,10 @@ async function waitUntilReady(): Promise<void> {
 }
 
 const routes = [
-  ["/", "Command Center Penjualan Walmart"],
-  ["/spk", "Decision Studio AHP–TOPSIS"],
-  ["/business-questions", "Questions yang Mendukung Keputusan"],
-  ["/dataset", "Dataset Walmart Sales"],
-  ["/dokumentasi", "Sitemap dan UML Use Case"],
-  ["/kredit", "Kredit Dataset dan Aset"],
+  ["/", "Command Center Sales Superstore"],
+  ["/spk", "Decision Studio Produk Superstore"],
+  ["/business-questions", "Questions yang Menjawab Sales Superstore"],
+  ["/kredit", "Kredit Dataset"],
 ] as const;
 
 try {
@@ -60,7 +58,7 @@ try {
     }
     console.log(`OK ${route}`);
   }
-  console.log("Smoke test enam halaman berhasil.");
+  console.log("Smoke test empat halaman berhasil.");
 } finally {
   server.kill("SIGTERM");
 }

@@ -1,21 +1,22 @@
 import type { Metadata } from "next";
 
 import { SpkClient } from "@/components/spk/spk-client";
-import { getWeeklySales } from "@/lib/data/repository";
+import { getSuperstoreSales } from "@/lib/data/repository";
 
-export const metadata: Metadata = { title: "SPK AHP–TOPSIS" };
+export const metadata: Metadata = { title: "SPK AHP-TOPSIS - Superstore" };
 
 export default function SpkPage() {
-  const records = getWeeklySales();
+  const records = getSuperstoreSales();
   return (
     <div className="container page-space">
       <section className="page-hero page-hero--compact">
         <div>
           <span className="eyebrow">Sistem Pendukung Keputusan</span>
-          <h1>Decision Studio AHP–TOPSIS</h1>
+          <h1>Decision Studio Produk Superstore</h1>
           <p>
-            Masukkan prioritas manajemen, hitung bobot AHP, dan dapatkan rekomendasi
-            toko penerima anggaran pengembangan melalui TOPSIS.
+            Sistem ini membantu memilih produk yang paling layak diprioritaskan untuk
+            promosi dan stok berdasarkan sales aktual, profit, quantity, margin, diskon,
+            dan risiko transaksi rugi.
           </p>
         </div>
       </section>
